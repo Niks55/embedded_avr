@@ -1,0 +1,27 @@
+.CSEG
+LDI ZL, LOW(NUM<<1)
+LDI ZH, HIGH(NUM<<1)
+LDI XL,0x22
+LDI XH,0x00
+LPM R20,Z+
+LPM R21,Z+
+LDI R16,4
+loop:
+LPM R22,Z+
+LPM R23,Z+
+CP R23,R21
+BRLO skip
+BREQ eq_hi
+RJMP update
+eq_hi:
+CP R22, R20
+BRLO skip
+update:
+MOV R20,R22
+MOV R21,R23
+skip:
+DEC R16
+BRNE loop
+ST X+,R20
+ST X,R21
+NUM: .dw 0x1234, 0x00FF, 0x27AA, 0xAAAA, 0x8000
